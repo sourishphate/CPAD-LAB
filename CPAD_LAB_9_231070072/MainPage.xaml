@@ -1,0 +1,439 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WidgetDemoApp.MainPage"
+             Title="Expense Manager"
+             BackgroundColor="#F4F6FB">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         RESOURCES
+    ════════════════════════════════════════════════════════════════════ -->
+    <ContentPage.Resources>
+
+        <!-- Chip / category button style -->
+        <Style x:Key="ChipStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="#F3F4F6"/>
+            <Setter Property="TextColor"       Value="#4B5563"/>
+            <Setter Property="CornerRadius"    Value="20"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="Padding"         Value="12,6"/>
+            <Setter Property="BorderColor"     Value="#E5E7EB"/>
+            <Setter Property="BorderWidth"     Value="1.5"/>
+            <Setter Property="Margin"          Value="0,0,4,4"/>
+        </Style>
+
+        <!-- Skill-tag chip style (used in CollectionView) -->
+        <Style x:Key="SkillChip" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="#E8EAF6"/>
+            <Setter Property="CornerRadius"    Value="20"/>
+            <Setter Property="Padding"         Value="14,6"/>
+            <Setter Property="Margin"          Value="0,0,8,0"/>
+            <Setter Property="HasShadow"       Value="False"/>
+            <Setter Property="BorderColor"     Value="#C5CAE9"/>
+        </Style>
+
+    </ContentPage.Resources>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         ROOT GRID  — header pinned, rest scrolls
+    ════════════════════════════════════════════════════════════════════ -->
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ── NAV HEADER ────────────────────────────────────────────── -->
+        <Frame Grid.Row="0"
+               BackgroundColor="#1A237E"
+               CornerRadius="0"
+               Padding="16,20"
+               HasShadow="False"
+               BorderColor="Transparent">
+            <StackLayout Spacing="2">
+                <Label Text="Expense Manager"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="White" HorizontalOptions="Center"/>
+                <Label Text="Track your income and expenses"
+                       FontSize="12" TextColor="#A5B4FC"
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- ── ALL SCROLLABLE CONTENT ────────────────────────────────── -->
+        <ScrollView Grid.Row="1">
+            <StackLayout Spacing="0" Padding="16">
+
+                <!-- ══════════════════════════════════════════════════════
+                     SECTION 1 — PROFILE CARD
+                     Widgets used: Image, Frame, StackLayout, Grid,
+                                   Label, Button, Entry
+                ═══════════════════════════════════════════════════════ -->
+                <Frame BackgroundColor="White"
+                       CornerRadius="22"
+                       Padding="20,18"
+                       Margin="0,14,0,0"
+                       HasShadow="True"
+                       BorderColor="Transparent">
+                    <StackLayout Spacing="10">
+
+                        <!-- Section heading -->
+                        <Label Text="Student Profile"
+                               FontSize="15" FontAttributes="Bold"
+                               TextColor="#111827"
+                               HorizontalOptions="Center"/>
+
+                        <!-- ── Image widget (Lab req) ─────────────────────
+                             Uses a publicly accessible placeholder avatar.
+                             Replace "dotnet_bot.png" with your own asset
+                             once it is added to Resources/Images.         -->
+                        <Image Source="https://i.pravatar.cc/150?img=12"
+                               WidthRequest="90"
+                               HeightRequest="90"
+                               Aspect="AspectFill"
+                               HorizontalOptions="Center">
+                            <Image.Clip>
+                                <EllipseGeometry Center="45,45" RadiusX="45" RadiusY="45"/>
+                            </Image.Clip>
+                        </Image>
+
+                        <!-- Name + course inside a card Frame -->
+                        <Frame BackgroundColor="#F4F6FB"
+                               CornerRadius="14"
+                               Padding="16,12"
+                               HasShadow="False"
+                               BorderColor="#E5E7EB">
+                            <StackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="Alex Johnson"
+                                       FontSize="18" FontAttributes="Bold"
+                                       TextColor="#111827"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="B.Tech — Computer Science"
+                                       FontSize="13" TextColor="#6B7280"
+                                       HorizontalOptions="Center"/>
+                            </StackLayout>
+                        </Frame>
+
+                        <!-- Like + Message buttons in a Grid (Lab req) -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button x:Name="LikeBtn"
+                                    Grid.Column="0"
+                                    Text="👍 Like (0)"
+                                    BackgroundColor="#1A237E"
+                                    TextColor="White"
+                                    CornerRadius="12"
+                                    FontSize="14" FontAttributes="Bold"
+                                    Clicked="OnLikeClicked"/>
+
+                            <Button x:Name="MessageBtn"
+                                    Grid.Column="1"
+                                    Text="✉ Message"
+                                    BackgroundColor="#E8EAF6"
+                                    TextColor="#1A237E"
+                                    CornerRadius="12"
+                                    FontSize="14" FontAttributes="Bold"
+                                    Clicked="OnMessageClicked"/>
+                        </Grid>
+
+                        <!-- Comment Entry (Lab req) -->
+                        <Label Text="Add a Comment"
+                               FontSize="12" FontAttributes="Bold" TextColor="#4B5563"/>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <Frame Grid.Column="0"
+                                   Padding="4,0" CornerRadius="10"
+                                   BorderColor="#E5E7EB"
+                                   BackgroundColor="#F9FAFB" HasShadow="False">
+                                <Entry x:Name="CommentEntry"
+                                       Placeholder="Write a comment…"
+                                       PlaceholderColor="#9CA3AF"
+                                       TextColor="#111827"
+                                       BackgroundColor="Transparent"
+                                       FontSize="14"/>
+                            </Frame>
+                            <Button Grid.Column="1"
+                                    Text="Post"
+                                    BackgroundColor="#1A237E"
+                                    TextColor="White"
+                                    CornerRadius="10"
+                                    FontSize="13" FontAttributes="Bold"
+                                    Padding="12,0"
+                                    Clicked="OnPostCommentClicked"/>
+                        </Grid>
+
+                        <!-- ── Skill tags — horizontal CollectionView (Lab req) -->
+                        <Label Text="Skills"
+                               FontSize="12" FontAttributes="Bold" TextColor="#4B5563"
+                               Margin="0,4,0,0"/>
+
+                        <!-- CollectionView with horizontal scroll (Lab req) -->
+                        <CollectionView ItemsSource="{Binding Skills}"
+                                        HeightRequest="46"
+                                        ItemsLayout="HorizontalList">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Style="{StaticResource SkillChip}">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="13" FontAttributes="Bold"
+                                               TextColor="#3949AB"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Center"/>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- ══════════════════════════════════════════════════════
+                     SECTION 2 — BALANCE SUMMARY CARD
+                     Widgets used: Frame, StackLayout, Grid, Label, BoxView
+                ═══════════════════════════════════════════════════════ -->
+                <Frame BackgroundColor="#1A237E"
+                       CornerRadius="22"
+                       Padding="20,18"
+                       Margin="0,14,0,0"
+                       HasShadow="True"
+                       BorderColor="Transparent">
+                    <StackLayout Spacing="6">
+                        <Label Text="Total Balance"
+                               FontSize="13" TextColor="#A5B4FC"
+                               HorizontalOptions="Center"/>
+                        <Label x:Name="BalanceLabel"
+                               Text="Rs.0.00"
+                               FontSize="40" FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+
+                        <Grid ColumnDefinitions="*,Auto,*" Margin="0,10,0,0">
+
+                            <!-- Income column -->
+                            <StackLayout Grid.Column="0" Spacing="4" HorizontalOptions="Center">
+                                <Frame BackgroundColor="#1B8A4E" CornerRadius="16"
+                                       WidthRequest="32" HeightRequest="32"
+                                       Padding="0" HasShadow="False" BorderColor="Transparent"
+                                       HorizontalOptions="Center">
+                                    <Label Text="+" FontSize="20" FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Frame>
+                                <Label Text="Income" FontSize="12"
+                                       TextColor="#A5B4FC" HorizontalOptions="Center"/>
+                                <Label x:Name="IncomeLabel" Text="Rs.0.00"
+                                       FontSize="17" FontAttributes="Bold"
+                                       TextColor="#6EE7A8" HorizontalOptions="Center"/>
+                            </StackLayout>
+
+                            <!-- Divider -->
+                            <BoxView Grid.Column="1" Color="#2D3D8E"
+                                     WidthRequest="1" HeightRequest="56"
+                                     VerticalOptions="Center"/>
+
+                            <!-- Expense column -->
+                            <StackLayout Grid.Column="2" Spacing="4" HorizontalOptions="Center">
+                                <Frame BackgroundColor="#C62828" CornerRadius="16"
+                                       WidthRequest="32" HeightRequest="32"
+                                       Padding="0" HasShadow="False" BorderColor="Transparent"
+                                       HorizontalOptions="Center">
+                                    <Label Text="-" FontSize="20" FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Frame>
+                                <Label Text="Expense" FontSize="12"
+                                       TextColor="#A5B4FC" HorizontalOptions="Center"/>
+                                <Label x:Name="ExpenseLabel" Text="Rs.0.00"
+                                       FontSize="17" FontAttributes="Bold"
+                                       TextColor="#FCA5A5" HorizontalOptions="Center"/>
+                            </StackLayout>
+
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- ══════════════════════════════════════════════════════
+                     SECTION 3 — ADD TRANSACTION FORM
+                     Widgets used: Frame, StackLayout, Grid, Label,
+                                   Button, Entry, FlexLayout, Switch
+                ═══════════════════════════════════════════════════════ -->
+                <Frame Margin="0,14,0,0"
+                       Padding="16"
+                       CornerRadius="18"
+                       BackgroundColor="White"
+                       HasShadow="True"
+                       BorderColor="Transparent">
+                    <StackLayout Spacing="10">
+
+                        <Label Text="Add Transaction"
+                               FontSize="15" FontAttributes="Bold"
+                               TextColor="#111827"/>
+
+                        <!-- Type toggle (Grid, two Buttons) -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button x:Name="IncomeTypeBtn" Grid.Column="0"
+                                    Text="+ Income"
+                                    BackgroundColor="#1B8A4E" TextColor="White"
+                                    CornerRadius="10" FontSize="14" FontAttributes="Bold"
+                                    Clicked="OnIncomeTypeClicked"/>
+                            <Button x:Name="ExpenseTypeBtn" Grid.Column="1"
+                                    Text="- Expense"
+                                    BackgroundColor="#E5E7EB" TextColor="#4B5563"
+                                    CornerRadius="10" FontSize="14"
+                                    Clicked="OnExpenseTypeClicked"/>
+                        </Grid>
+
+                        <!-- Title Entry -->
+                        <Label Text="Title" FontSize="12" FontAttributes="Bold" TextColor="#4B5563"/>
+                        <Frame Padding="4,0" CornerRadius="10" BorderColor="#E5E7EB"
+                               BackgroundColor="#F9FAFB" HasShadow="False">
+                            <Entry x:Name="TitleEntry"
+                                   Placeholder="e.g. Lunch, Salary, Rent"
+                                   PlaceholderColor="#9CA3AF"
+                                   TextColor="#111827"
+                                   BackgroundColor="Transparent"
+                                   FontSize="15"/>
+                        </Frame>
+
+                        <!-- Amount Entry -->
+                        <Label Text="Amount (Rs.)" FontSize="12" FontAttributes="Bold" TextColor="#4B5563"/>
+                        <Frame Padding="4,0" CornerRadius="10" BorderColor="#E5E7EB"
+                               BackgroundColor="#F9FAFB" HasShadow="False">
+                            <Entry x:Name="AmountEntry"
+                                   Placeholder="0.00"
+                                   PlaceholderColor="#9CA3AF"
+                                   TextColor="#111827"
+                                   BackgroundColor="Transparent"
+                                   FontSize="15"
+                                   Keyboard="Numeric"/>
+                        </Frame>
+
+                        <!-- Category chips (FlexLayout + Buttons) -->
+                        <Label Text="Category" FontSize="12" FontAttributes="Bold" TextColor="#4B5563"/>
+                        <FlexLayout Wrap="Wrap" Direction="Row">
+                            <Button x:Name="CatFood"     Text="Food"     Style="{StaticResource ChipStyle}" Clicked="OnCategoryClicked"/>
+                            <Button x:Name="CatTravel"   Text="Travel"   Style="{StaticResource ChipStyle}" Clicked="OnCategoryClicked"/>
+                            <Button x:Name="CatShopping" Text="Shopping" Style="{StaticResource ChipStyle}" Clicked="OnCategoryClicked"/>
+                            <Button x:Name="CatBills"    Text="Bills"    Style="{StaticResource ChipStyle}" Clicked="OnCategoryClicked"/>
+                            <Button x:Name="CatSalary"   Text="Salary"   Style="{StaticResource ChipStyle}" Clicked="OnCategoryClicked"/>
+                            <Button x:Name="CatOther"    Text="Other"    Style="{StaticResource ChipStyle}" Clicked="OnCategoryClicked"/>
+                        </FlexLayout>
+
+                        <!-- Show-expenses-only Switch (Lab req) -->
+                        <StackLayout Orientation="Horizontal" Spacing="8">
+                            <Switch x:Name="FilterSwitch"
+                                    IsToggled="False"
+                                    ThumbColor="#3949AB"
+                                    OnColor="#C7D2FE"
+                                    VerticalOptions="Center"
+                                    Toggled="OnFilterToggled"/>
+                            <Label Text="Show expenses only"
+                                   FontSize="13" TextColor="#4B5563"
+                                   VerticalOptions="Center"/>
+                        </StackLayout>
+
+                        <!-- Submit button -->
+                        <Button x:Name="AddBtn"
+                                Text="+ Add Income"
+                                BackgroundColor="#1B8A4E"
+                                TextColor="White"
+                                CornerRadius="12"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                HeightRequest="52"
+                                Clicked="OnAddClicked"/>
+
+                    </StackLayout>
+                </Frame>
+
+                <!-- ══════════════════════════════════════════════════════
+                     SECTION 4 — TRANSACTION LIST
+                     Widgets used: Label, StackLayout, BindableLayout,
+                                   Frame, Grid, Button (delete)
+                ═══════════════════════════════════════════════════════ -->
+                <Label x:Name="ListHeading"
+                       Text="Transactions"
+                       FontSize="16" FontAttributes="Bold"
+                       TextColor="#111827"
+                       Margin="0,18,0,6"/>
+
+                <!-- Empty state -->
+                <StackLayout x:Name="EmptyState"
+                             IsVisible="False"
+                             HorizontalOptions="Center"
+                             Spacing="6"
+                             Margin="0,24,0,0">
+                    <Label Text="No transactions yet"
+                           FontSize="16" FontAttributes="Bold"
+                           TextColor="#4B5563"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Add your first income or expense above."
+                           FontSize="13" TextColor="#9CA3AF"
+                           HorizontalOptions="Center"/>
+                </StackLayout>
+
+                <!-- Transaction cards via BindableLayout
+                     (avoids CollectionView-inside-ScrollView sizing bug) -->
+                <StackLayout x:Name="TransactionList" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="14" CornerRadius="14"
+                                   BackgroundColor="White"
+                                   HasShadow="True"
+                                   BorderColor="Transparent">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                                      ColumnSpacing="12">
+
+                                    <!-- Icon badge -->
+                                    <Frame Grid.Column="0"
+                                           BackgroundColor="{Binding BadgeColor}"
+                                           CornerRadius="22"
+                                           WidthRequest="44" HeightRequest="44"
+                                           Padding="0" HasShadow="False"
+                                           BorderColor="Transparent"
+                                           VerticalOptions="Center">
+                                        <Label Text="{Binding Icon}"
+                                               FontSize="20"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Frame>
+
+                                    <!-- Title + meta -->
+                                    <StackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Title}"
+                                               FontSize="15" FontAttributes="Bold"
+                                               TextColor="#111827"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding Meta}"
+                                               FontSize="12" TextColor="#9CA3AF"/>
+                                    </StackLayout>
+
+                                    <!-- Amount -->
+                                    <Label Grid.Column="2"
+                                           Text="{Binding AmountText}"
+                                           FontSize="15" FontAttributes="Bold"
+                                           TextColor="{Binding AmountColor}"
+                                           VerticalOptions="Center"/>
+
+                                    <!-- Delete button -->
+                                    <Button Grid.Column="3"
+                                            Text="✕"
+                                            FontSize="12" FontAttributes="Bold"
+                                            BackgroundColor="#FDEAEA"
+                                            TextColor="#C62828"
+                                            CornerRadius="14"
+                                            WidthRequest="30" HeightRequest="30"
+                                            Padding="0"
+                                            VerticalOptions="Center"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                            CommandParameter="{Binding Id}"/>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+
+                <!-- Bottom padding -->
+                <BoxView Color="Transparent" HeightRequest="40"/>
+
+            </StackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>
