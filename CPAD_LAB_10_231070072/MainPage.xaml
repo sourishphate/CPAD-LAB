@@ -1,0 +1,506 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WidgetDemoApp.MainPage"
+             Title="Recipe Card"
+             BackgroundColor="#FFF8F2">
+
+    <ContentPage.Resources>
+        <Style x:Key="TagChip" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="#FFF0E6"/>
+            <Setter Property="CornerRadius"    Value="20"/>
+            <Setter Property="Padding"         Value="14,6"/>
+            <Setter Property="Margin"          Value="0,0,8,8"/>
+            <Setter Property="HasShadow"       Value="False"/>
+            <Setter Property="BorderColor"     Value="#FFCCAA"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <!-- ROOT ScrollView (lab req: ScrollView) -->
+    <ScrollView>
+        <!-- Vertical StackLayout backbone (lab req: StackLayout) -->
+        <StackLayout Spacing="0" Padding="0,0,0,40">
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 1 — HERO IMAGE + BADGE + SAVE BUTTON
+                 Layout: AbsoluteLayout  (lab req: AbsoluteLayout)
+            ════════════════════════════════════════════════ -->
+            <AbsoluteLayout HeightRequest="280">
+
+                <!-- Dish image -->
+                <Image Source="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800"
+                       Aspect="AspectFill"
+                       AbsoluteLayout.LayoutBounds="0,0,1,280"
+                       AbsoluteLayout.LayoutFlags="XProportional,WidthProportional"/>
+
+                <!-- Dark gradient overlay -->
+                <BoxView Color="#99000000"
+                         AbsoluteLayout.LayoutBounds="0,180,1,100"
+                         AbsoluteLayout.LayoutFlags="XProportional,WidthProportional"/>
+
+                <!-- Recipe title on image -->
+                <Label Text="Margherita Pizza"
+                       FontSize="26" FontAttributes="Bold"
+                       TextColor="White"
+                       AbsoluteLayout.LayoutBounds="16,196,1,38"
+                       AbsoluteLayout.LayoutFlags="WidthProportional"/>
+
+                <!-- Subtitle -->
+                <Label Text="Classic Italian • 35 min total"
+                       FontSize="13" TextColor="#FFD0B0"
+                       AbsoluteLayout.LayoutBounds="16,236,1,24"
+                       AbsoluteLayout.LayoutFlags="WidthProportional"/>
+
+                <!-- Difficulty badge overlapping top-right (AbsoluteLayout key demo) -->
+                <Frame BackgroundColor="#E64A19"
+                       CornerRadius="22" Padding="14,6"
+                       HasShadow="True" BorderColor="Transparent"
+                       AbsoluteLayout.LayoutBounds="1,14,120,36"
+                       AbsoluteLayout.LayoutFlags="XProportional">
+                    <Label Text="Easy"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Frame>
+
+                <!-- Save / heart button — bottom-right, away from title text -->
+                <Frame x:Name="SaveFrame"
+                       BackgroundColor="#CC000000"
+                       CornerRadius="22" Padding="10,6"
+                       HasShadow="False" BorderColor="Transparent"
+                       AbsoluteLayout.LayoutBounds="1,232,110,36"
+                       AbsoluteLayout.LayoutFlags="XProportional">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSaveTapped"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" Spacing="6">
+                        <Label x:Name="HeartLabel"
+                               Text="♡"
+                               FontSize="18" TextColor="White"
+                               VerticalOptions="Center"/>
+                        <Label x:Name="SaveLabel"
+                               Text="Save"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="White"
+                               VerticalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+            </AbsoluteLayout>
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 2 — SERVING ADJUSTER + QUICK STATS
+                 Layout: Grid (lab req: Grid)
+            ════════════════════════════════════════════════ -->
+            <Frame BackgroundColor="White" CornerRadius="0"
+                   Padding="16,14" HasShadow="False" BorderColor="#F0E6DC">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto"
+                      RowSpacing="12">
+
+                    <!-- Row 0: Stats row (horizontal StackLayout inside Grid) -->
+                    <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                                 Orientation="Horizontal">
+
+                        <StackLayout Spacing="2" HorizontalOptions="CenterAndExpand">
+                            <Label Text="15 min" FontSize="17" FontAttributes="Bold"
+                                   TextColor="#E64A19" HorizontalOptions="Center"/>
+                            <Label Text="Prep" FontSize="11" TextColor="#9E9E9E"
+                                   HorizontalOptions="Center"/>
+                        </StackLayout>
+
+                        <BoxView Color="#E0D6CC" WidthRequest="1"
+                                 HeightRequest="36" VerticalOptions="Center"/>
+
+                        <StackLayout Spacing="2" HorizontalOptions="CenterAndExpand">
+                            <Label Text="20 min" FontSize="17" FontAttributes="Bold"
+                                   TextColor="#E64A19" HorizontalOptions="Center"/>
+                            <Label Text="Cook" FontSize="11" TextColor="#9E9E9E"
+                                   HorizontalOptions="Center"/>
+                        </StackLayout>
+
+                        <BoxView Color="#E0D6CC" WidthRequest="1"
+                                 HeightRequest="36" VerticalOptions="Center"/>
+
+                        <StackLayout Spacing="2" HorizontalOptions="CenterAndExpand">
+                            <Label Text="320 kcal" FontSize="17" FontAttributes="Bold"
+                                   TextColor="#E64A19" HorizontalOptions="Center"/>
+                            <Label Text="Per Serving" FontSize="11" TextColor="#9E9E9E"
+                                   HorizontalOptions="Center"/>
+                        </StackLayout>
+
+                    </StackLayout>
+
+                    <!-- Row 1: Serving adjuster -->
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Text="Servings"
+                           FontSize="14" FontAttributes="Bold"
+                           TextColor="#3E2723"
+                           VerticalOptions="Center"/>
+
+                    <StackLayout Grid.Row="1" Grid.Column="1"
+                                 Orientation="Horizontal" Spacing="0">
+                        <Button Text="-"
+                                FontSize="18" FontAttributes="Bold"
+                                BackgroundColor="#F5EDE6"
+                                TextColor="#E64A19"
+                                CornerRadius="10"
+                                WidthRequest="40" HeightRequest="40"
+                                Padding="0"
+                                Clicked="OnServingMinus"/>
+                        <Label x:Name="ServingLabel"
+                               Text="4"
+                               FontSize="18" FontAttributes="Bold"
+                               TextColor="#3E2723"
+                               WidthRequest="40"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               VerticalOptions="Center"/>
+                        <Button Text="+"
+                                FontSize="18" FontAttributes="Bold"
+                                BackgroundColor="#E64A19"
+                                TextColor="White"
+                                CornerRadius="10"
+                                WidthRequest="40" HeightRequest="40"
+                                Padding="0"
+                                Clicked="OnServingPlus"/>
+                    </StackLayout>
+
+                </Grid>
+            </Frame>
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 3 — TAG CHIPS
+                 Layout: FlexLayout with Wrap  (lab req: FlexLayout)
+            ════════════════════════════════════════════════ -->
+            <StackLayout Padding="16,16,16,0" Spacing="8">
+                <Label Text="Tags" FontSize="15" FontAttributes="Bold"
+                       TextColor="#3E2723"/>
+                <FlexLayout Wrap="Wrap" Direction="Row">
+                    <Frame Style="{StaticResource TagChip}">
+                        <Label Text="Italian" FontSize="13" TextColor="#E64A19" FontAttributes="Bold"/>
+                    </Frame>
+                    <Frame Style="{StaticResource TagChip}">
+                        <Label Text="Vegetarian" FontSize="13" TextColor="#E64A19" FontAttributes="Bold"/>
+                    </Frame>
+                    <Frame Style="{StaticResource TagChip}">
+                        <Label Text="Quick Meal" FontSize="13" TextColor="#E64A19" FontAttributes="Bold"/>
+                    </Frame>
+                    <Frame Style="{StaticResource TagChip}">
+                        <Label Text="Oven Baked" FontSize="13" TextColor="#E64A19" FontAttributes="Bold"/>
+                    </Frame>
+                    <Frame Style="{StaticResource TagChip}">
+                        <Label Text="Kid Friendly" FontSize="13" TextColor="#E64A19" FontAttributes="Bold"/>
+                    </Frame>
+                    <Frame Style="{StaticResource TagChip}">
+                        <Label Text="Comfort Food" FontSize="13" TextColor="#E64A19" FontAttributes="Bold"/>
+                    </Frame>
+                </FlexLayout>
+            </StackLayout>
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 4 — INGREDIENTS TABLE (scales with servings)
+                 Layout: Grid rows  (lab req: Grid)
+            ════════════════════════════════════════════════ -->
+            <StackLayout Padding="16,16,16,0" Spacing="8">
+                <Label Text="Ingredients" FontSize="15" FontAttributes="Bold"
+                       TextColor="#3E2723"/>
+
+                <Frame CornerRadius="14" Padding="0"
+                       BackgroundColor="White"
+                       HasShadow="True" BorderColor="Transparent"
+                       IsClippedToBounds="True">
+                    <StackLayout Spacing="0">
+
+                        <!-- Header -->
+                        <Grid ColumnDefinitions="*,Auto"
+                              BackgroundColor="#E64A19" Padding="14,10">
+                            <Label Grid.Column="0" Text="Ingredient"
+                                   FontSize="13" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="1" Text="Quantity"
+                                   FontSize="13" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="End"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto" BackgroundColor="White" Padding="14,12">
+                            <Label Grid.Column="0" Text="Pizza Dough" FontSize="14" TextColor="#3E2723"/>
+                            <Label x:Name="Ing1" Grid.Column="1" Text="250 g"
+                                   FontSize="14" TextColor="#757575" HorizontalOptions="End"/>
+                        </Grid>
+                        <BoxView Color="#F5EDE6" HeightRequest="1"/>
+
+                        <Grid ColumnDefinitions="*,Auto" BackgroundColor="#FFF8F2" Padding="14,12">
+                            <Label Grid.Column="0" Text="Tomato Sauce" FontSize="14" TextColor="#3E2723"/>
+                            <Label x:Name="Ing2" Grid.Column="1" Text="150 ml"
+                                   FontSize="14" TextColor="#757575" HorizontalOptions="End"/>
+                        </Grid>
+                        <BoxView Color="#F5EDE6" HeightRequest="1"/>
+
+                        <Grid ColumnDefinitions="*,Auto" BackgroundColor="White" Padding="14,12">
+                            <Label Grid.Column="0" Text="Mozzarella" FontSize="14" TextColor="#3E2723"/>
+                            <Label x:Name="Ing3" Grid.Column="1" Text="200 g"
+                                   FontSize="14" TextColor="#757575" HorizontalOptions="End"/>
+                        </Grid>
+                        <BoxView Color="#F5EDE6" HeightRequest="1"/>
+
+                        <Grid ColumnDefinitions="*,Auto" BackgroundColor="#FFF8F2" Padding="14,12">
+                            <Label Grid.Column="0" Text="Fresh Basil" FontSize="14" TextColor="#3E2723"/>
+                            <Label x:Name="Ing4" Grid.Column="1" Text="10 leaves"
+                                   FontSize="14" TextColor="#757575" HorizontalOptions="End"/>
+                        </Grid>
+                        <BoxView Color="#F5EDE6" HeightRequest="1"/>
+
+                        <Grid ColumnDefinitions="*,Auto" BackgroundColor="White" Padding="14,12">
+                            <Label Grid.Column="0" Text="Olive Oil" FontSize="14" TextColor="#3E2723"/>
+                            <Label x:Name="Ing5" Grid.Column="1" Text="2 tbsp"
+                                   FontSize="14" TextColor="#757575" HorizontalOptions="End"/>
+                        </Grid>
+                        <BoxView Color="#F5EDE6" HeightRequest="1"/>
+
+                        <Grid ColumnDefinitions="*,Auto" BackgroundColor="#FFF8F2" Padding="14,12">
+                            <Label Grid.Column="0" Text="Salt" FontSize="14" TextColor="#3E2723"/>
+                            <Label x:Name="Ing6" Grid.Column="1" Text="1 tsp"
+                                   FontSize="14" TextColor="#757575" HorizontalOptions="End"/>
+                        </Grid>
+
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 5 — INSTRUCTIONS (tappable step checker)
+                 Layout: vertical StackLayout of tappable step cards
+            ════════════════════════════════════════════════ -->
+            <StackLayout Padding="16,16,16,0" Spacing="8">
+
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Instructions"
+                           FontSize="15" FontAttributes="Bold"
+                           TextColor="#3E2723"
+                           HorizontalOptions="StartAndExpand"/>
+                    <Label x:Name="StepsLabel"
+                           Text="0 / 6 done"
+                           FontSize="12" TextColor="#9E9E9E"
+                           VerticalOptions="Center"/>
+                </StackLayout>
+
+                <!-- Each step is a tappable Frame -->
+                <Frame x:Name="Step1Frame" CornerRadius="12" Padding="12"
+                       BackgroundColor="White" HasShadow="False" BorderColor="#F0E6DC">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStepTapped" CommandParameter="1"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Frame x:Name="Step1Badge" BackgroundColor="#E64A19" CornerRadius="16"
+                               WidthRequest="32" HeightRequest="32"
+                               Padding="0" HasShadow="False" BorderColor="Transparent">
+                            <Label Text="1" FontSize="14" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label x:Name="Step1Label"
+                               Text="Preheat the oven to 230 C and place a baking tray inside to heat up."
+                               FontSize="14" TextColor="#4E342E"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:Name="Step2Frame" CornerRadius="12" Padding="12"
+                       BackgroundColor="White" HasShadow="False" BorderColor="#F0E6DC">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStepTapped" CommandParameter="2"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Frame x:Name="Step2Badge" BackgroundColor="#E64A19" CornerRadius="16"
+                               WidthRequest="32" HeightRequest="32"
+                               Padding="0" HasShadow="False" BorderColor="Transparent">
+                            <Label Text="2" FontSize="14" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label x:Name="Step2Label"
+                               Text="Roll out the pizza dough on a lightly floured surface to your preferred thickness."
+                               FontSize="14" TextColor="#4E342E"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:Name="Step3Frame" CornerRadius="12" Padding="12"
+                       BackgroundColor="White" HasShadow="False" BorderColor="#F0E6DC">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStepTapped" CommandParameter="3"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Frame x:Name="Step3Badge" BackgroundColor="#E64A19" CornerRadius="16"
+                               WidthRequest="32" HeightRequest="32"
+                               Padding="0" HasShadow="False" BorderColor="Transparent">
+                            <Label Text="3" FontSize="14" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label x:Name="Step3Label"
+                               Text="Spread tomato sauce evenly over the base, leaving a 1 cm border around the edge."
+                               FontSize="14" TextColor="#4E342E"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:Name="Step4Frame" CornerRadius="12" Padding="12"
+                       BackgroundColor="White" HasShadow="False" BorderColor="#F0E6DC">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStepTapped" CommandParameter="4"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Frame x:Name="Step4Badge" BackgroundColor="#E64A19" CornerRadius="16"
+                               WidthRequest="32" HeightRequest="32"
+                               Padding="0" HasShadow="False" BorderColor="Transparent">
+                            <Label Text="4" FontSize="14" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label x:Name="Step4Label"
+                               Text="Tear mozzarella into pieces and scatter over the sauce. Drizzle with olive oil."
+                               FontSize="14" TextColor="#4E342E"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:Name="Step5Frame" CornerRadius="12" Padding="12"
+                       BackgroundColor="White" HasShadow="False" BorderColor="#F0E6DC">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStepTapped" CommandParameter="5"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Frame x:Name="Step5Badge" BackgroundColor="#E64A19" CornerRadius="16"
+                               WidthRequest="32" HeightRequest="32"
+                               Padding="0" HasShadow="False" BorderColor="Transparent">
+                            <Label Text="5" FontSize="14" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label x:Name="Step5Label"
+                               Text="Bake for 18 to 20 minutes until the crust is golden and the cheese is bubbling."
+                               FontSize="14" TextColor="#4E342E"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+                <Frame x:Name="Step6Frame" CornerRadius="12" Padding="12"
+                       BackgroundColor="White" HasShadow="False" BorderColor="#F0E6DC">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStepTapped" CommandParameter="6"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Frame x:Name="Step6Badge" BackgroundColor="#E64A19" CornerRadius="16"
+                               WidthRequest="32" HeightRequest="32"
+                               Padding="0" HasShadow="False" BorderColor="Transparent">
+                            <Label Text="6" FontSize="14" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <Label x:Name="Step6Label"
+                               Text="Remove from oven, scatter fresh basil leaves on top and serve immediately."
+                               FontSize="14" TextColor="#4E342E"
+                               HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 6 — NUTRITION GRID  (2x2 Grid)
+            ════════════════════════════════════════════════ -->
+            <StackLayout Padding="16,16,16,0" Spacing="8">
+                <Label Text="Nutrition per Serving"
+                       FontSize="15" FontAttributes="Bold" TextColor="#3E2723"/>
+
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                      ColumnSpacing="10" RowSpacing="10">
+                    <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="White"
+                           CornerRadius="14" Padding="14,12" HasShadow="True" BorderColor="Transparent">
+                        <StackLayout Spacing="2">
+                            <Label Text="Calories" FontSize="12" TextColor="#9E9E9E"/>
+                            <Label x:Name="NutCal" Text="320 kcal" FontSize="18"
+                                   FontAttributes="Bold" TextColor="#E64A19"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="White"
+                           CornerRadius="14" Padding="14,12" HasShadow="True" BorderColor="Transparent">
+                        <StackLayout Spacing="2">
+                            <Label Text="Protein" FontSize="12" TextColor="#9E9E9E"/>
+                            <Label Text="14 g" FontSize="18" FontAttributes="Bold" TextColor="#E64A19"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="White"
+                           CornerRadius="14" Padding="14,12" HasShadow="True" BorderColor="Transparent">
+                        <StackLayout Spacing="2">
+                            <Label Text="Carbs" FontSize="12" TextColor="#9E9E9E"/>
+                            <Label Text="38 g" FontSize="18" FontAttributes="Bold" TextColor="#E64A19"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="White"
+                           CornerRadius="14" Padding="14,12" HasShadow="True" BorderColor="Transparent">
+                        <StackLayout Spacing="2">
+                            <Label Text="Fat" FontSize="12" TextColor="#9E9E9E"/>
+                            <Label Text="11 g" FontSize="18" FontAttributes="Bold" TextColor="#E64A19"/>
+                        </StackLayout>
+                    </Frame>
+                </Grid>
+            </StackLayout>
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 7 — PERSONAL NOTES  (lab req: Entry)
+                 Entry view lets the user type a free-form note
+                 about the recipe, e.g. substitutions or reminders.
+            ════════════════════════════════════════════════ -->
+            <StackLayout Padding="16,16,16,0" Spacing="8">
+                <Label Text="Your Notes"
+                       FontSize="15" FontAttributes="Bold"
+                       TextColor="#3E2723"/>
+                <Frame CornerRadius="14" Padding="4,0"
+                       BackgroundColor="White"
+                       HasShadow="True" BorderColor="Transparent">
+                    <Entry x:Name="NotesEntry"
+                           Placeholder="e.g. add extra garlic, skip salt…"
+                           PlaceholderColor="#BDBDBD"
+                           TextColor="#3E2723"
+                           BackgroundColor="Transparent"
+                           FontSize="14"
+                           ReturnType="Done"
+                           Completed="OnNotesCompleted"/>
+                </Frame>
+            </StackLayout>
+
+            <!-- ═══════════════════════════════════════════════
+                 SECTION 8 — ACTIVITY INDICATOR + START COOKING
+                 ActivityIndicator spins while cooking session is
+                 active, demonstrating the view in context.
+            ════════════════════════════════════════════════ -->
+            <StackLayout Padding="16,20,16,0" Spacing="12">
+
+                <!-- ActivityIndicator (lab req: ActivityIndicator) -->
+                <StackLayout Orientation="Horizontal"
+                             HorizontalOptions="Center"
+                             Spacing="10"
+                             x:Name="CookingStatusRow"
+                             IsVisible="False">
+                    <ActivityIndicator x:Name="CookingIndicator"
+                                       IsRunning="False"
+                                       Color="#E64A19"
+                                       VerticalOptions="Center"/>
+                    <Label x:Name="CookingStatusLabel"
+                           Text="Cooking in progress…"
+                           FontSize="13" TextColor="#E64A19"
+                           FontAttributes="Italic"
+                           VerticalOptions="Center"/>
+                </StackLayout>
+
+                <Button x:Name="CookBtn"
+                        Text="Start Cooking"
+                        BackgroundColor="#E64A19"
+                        TextColor="White"
+                        FontSize="17" FontAttributes="Bold"
+                        CornerRadius="16"
+                        HeightRequest="56"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnCookClicked"/>
+
+            </StackLayout>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
